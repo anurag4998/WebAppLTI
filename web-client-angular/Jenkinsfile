@@ -5,8 +5,8 @@ pipeline {
         stage('Deploy to development') { 
             steps {
                 sh 'echo "Add build steps here"'
-                sh 'cd web-client && npm install'
-                sh 'cd web-client && npm run-script build'
+                sh 'cd web-client-angular && npm install'
+                sh 'cd web-client-angular && npm run-script build'
                 withAWS(region:'ap-south-1', credentials:'IAMuserLTI') {
                     s3Upload(bucket: 'reactdeploydemo', file:'web-client-angular/dist/brazepoc')
                 }
