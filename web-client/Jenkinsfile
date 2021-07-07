@@ -11,7 +11,7 @@ pipeline {
                     s3Upload(bucket: 'reactdeploydemo', file:'web-client/build/')
                 }
                 sh 'echo ${currentBuild.result}'
-                emailext attachLog: true, body: 'Proceed or abort the deployment process at $RUN_DISPLAY_URL.', recipientProviders: [developers()], subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - Permission required for deploying to production.'
+                emailext attachLog: true, body: 'Proceed or abort the deployment process at $RUN_DISPLAY_URL.', to: 'vineet.bakshi95@gmail.com', recipientProviders: [developers()], subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - Permission required for deploying to production.'
             }
         }
         stage('Deploy to production') {
