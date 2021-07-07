@@ -28,7 +28,7 @@ pipeline {
                 sh 'git checkout --track origin/master'
                 sh 'git merge dev'
                 withCredentials([usernamePassword(credentialsId: 'mygithubcredentials', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                    sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/vineetb95/TryAtJenkins' )
+                    sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/vineetb95/WebAppLTI' )
                 }
             }
         }
