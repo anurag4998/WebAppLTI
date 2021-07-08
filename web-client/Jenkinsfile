@@ -19,7 +19,7 @@ pipeline {
             }
             steps {
                 withAWS(region:'ap-south-1', credentials:'IAMuserLTI') {
-                    s3Copy fromBucket: 'reactdeploydemo', fromPath: '/', toBucket: 'forstaticwebhosting', toPath: '/'
+                    s3Copy fromBucket: 'reactdeploydemo', fromPath: '**/', toBucket: 'forstaticwebhosting', toPath: '**/'
                 }
             }
         }
