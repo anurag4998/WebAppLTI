@@ -18,7 +18,9 @@ pipeline {
               message 'Do you want to proceed ??'
             }
             steps {
-                s3Copy fromBucket: 'reactdeploydemo', fromPath: '', toBucket: 'forstaticwebhosting', toPath: ''
+                withAWS(region:'ap-south-1', credentials:'IAMuserLTI') {
+                    s3Copy fromBucket: 'reactdeploydemo', fromPath: '', toBucket: 'forstaticwebhosting', toPath: ''
+                }
             }
         }
         stage("Commit changes back to production repo"){
