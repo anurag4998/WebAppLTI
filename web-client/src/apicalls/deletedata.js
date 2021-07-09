@@ -5,7 +5,7 @@ import axios from "axios";
 const deleteData = async(data) =>
 {
     delete data.tableData;
-    let a = await axios.delete("http://localhost:3302/api/person",{
+    await axios.delete("http://ec2-65-0-99-186.ap-south-1.compute.amazonaws.com/api/person",{
         data: data
     },
     {

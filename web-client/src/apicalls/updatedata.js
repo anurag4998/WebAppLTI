@@ -7,7 +7,7 @@ const updateData = async(data) =>
     delete data.tableData;
     try 
     {
-        await axios.put("http://localhost:3302/api/person",{
+        await axios.put("http://ec2-65-0-99-186.ap-south-1.compute.amazonaws.com/api/person",{
             name:data.name,
             balance:data.balance,
             email_id:data.email_id,
