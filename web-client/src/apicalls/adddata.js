@@ -8,7 +8,7 @@ const addData = async(data) =>
     console.log(data)
     try 
     {
-        await axios.post("http://localhost:3302/api/person",{
+        await axios.post("http://ec2-65-0-99-186.ap-south-1.compute.amazonaws.com/api/person",{
             name:data.name,
             balance:data.balance,
             email_id:data.email_id,
