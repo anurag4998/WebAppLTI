@@ -5,6 +5,8 @@ pipeline {
             steps {
                 sh 'cd devops_api && dotnet restore'
                 sh 'cd devops_api && dotnet build'
+                sh 'cd devops_api && dotnet publish -o site'
+                sh 'ls devops_api'
             }
         }
         // stage("Commit changes back to production repo"){
