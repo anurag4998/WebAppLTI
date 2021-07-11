@@ -43,7 +43,7 @@ pipeline {
                     environmentName: 'Dotnetserverdev-env',
                     // rootObject: 'devops_api/dev_builds/dotnetserverdev-${BUILD_NUMBER}-${BUILD_TAG}.zip',
                     rootObject: 'devops_api/dev_builds/dotnetserverdev-18-jenkins-dotnetapi-18.zip',
-                    versionLabelFormat: '${BUILD_NUMBER}-${BUILD_TAG}-prod',
+                    versionLabelFormat: '${BUILD_NUMBER}-${BUILD_TAG}',
                     sleepTime: 90,
                     checkHealth: true
                 ])
