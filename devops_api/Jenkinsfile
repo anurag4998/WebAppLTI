@@ -11,21 +11,21 @@ pipeline {
                 sh 'cd devops_api && zip deploymentpackage.zip site.zip aws-windows-deployment-manifest.json'
             }
         }
-        stage('Deploy to EB - development'){
-            steps{
-                step([$class: 'AWSEBDeploymentBuilder',
-                    credentialId: 'IAMuserLTI',
-                    awsRegion: 'ap-south-1',
-                    maxAttempts: 30,
-                    applicationName: 'dotnetserverdev',
-                    environmentName: 'Dotnetserverdev-env',
-                    rootObject: 'devops_api/deploymentpackage.zip',
-                    versionLabelFormat: '${BUILD_NUMBER}-${BUILD_TAG}',
-                    sleepTime: 90,
-                    checkHealth: true
-                ])
-            }
-        }   
+        // stage('Deploy to EB - development'){
+        //     steps{
+        //         step([$class: 'AWSEBDeploymentBuilder',
+        //             credentialId: 'IAMuserLTI',
+        //             awsRegion: 'ap-south-1',
+        //             maxAttempts: 30,
+        //             applicationName: 'dotnetserverdev',
+        //             environmentName: 'Dotnetserverdev-env',
+        //             rootObject: 'devops_api/deploymentpackage.zip',
+        //             versionLabelFormat: '${BUILD_NUMBER}-${BUILD_TAG}',
+        //             sleepTime: 90,
+        //             checkHealth: true
+        //         ])
+        //     }
+        // }   
         stage('Deploy to EB - production'){
             input{
               message 'Do you want to proceed ??'
