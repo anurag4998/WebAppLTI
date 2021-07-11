@@ -11,45 +11,42 @@ pipeline {
                 sh 'cd devops_api && zip deploymentpackage.zip site.zip aws-windows-deployment-manifest.json'
             }
         }
-        // stage('Deploy to EB - development'){
-        //     steps{
-        //         step([$class: 'AWSEBDeploymentBuilder',
-        //             credentialId: 'IAMuserLTI',
-        //             awsRegion: 'ap-south-1',
-        //             maxAttempts: 30,
-        //             applicationName: 'dotnetserverdev',
-        //             environmentName: 'Dotnetserverdev-env',
-        //             rootObject: 'devops_api/deploymentpackage.zip',
-        //             versionLabelFormat: '${BUILD_NUMBER}-${BUILD_TAG}',
-        //             sleepTime: 90,
-        //             checkHealth: true
-        //         ])
-        //     }
-        // }   
-        stage('Deploy to EB - production'){
-            input{
-              message 'Do you want to proceed ??'
-            }
+        stage('Deploy to EB - development'){
             steps{
-                withAWS(region:'ap-south-1', credentials:'IAMuserLTI') {
-                    // s3Download bucket: 'elasticbeanstalk-ap-south-1-913313549960', path: "null/dotnetserverdev-${BUILD_NUMBER}-${BUILD_TAG}.zip", file:'devops_api/dev_builds/'
-                    s3Download bucket: 'elasticbeanstalk-ap-south-1-913313549960', file:'devops_api/dev_builds/'
-                }
-                sh "ls devops_api/dev_builds/null"
                 step([$class: 'AWSEBDeploymentBuilder',
                     credentialId: 'IAMuserLTI',
                     awsRegion: 'ap-south-1',
                     maxAttempts: 30,
                     applicationName: 'dotnetserverdev',
                     environmentName: 'Dotnetserverdev-env',
-                    rootObject: 'devops_api/dev_builds/null/dotnetserverdev-18-jenkins-dotnetapi-18.zip',
+                    rootObject: 'devops_api/deploymentpackage.zip',
+                    versionLabelFormat: '${BUILD_NUMBER}-${BUILD_TAG}',
+                    sleepTime: 90,
+                    checkHealth: true
+                ])
+            }
+        }   
+        stage('Deploy to EB - production'){
+            input{
+              message 'Do you want to proceed ??'
+            }
+            steps{
+                withAWS(region:'ap-south-1', credentials:'IAMuserLTI') {
+                    s3Download bucket: 'elasticbeanstalk-ap-south-1-913313549960', file:'devops_api/dev_builds/'
+                }
+                step([$class: 'AWSEBDeploymentBuilder',
+                    credentialId: 'IAMuserLTI',
+                    awsRegion: 'ap-south-1',
+                    maxAttempts: 30,
+                    applicationName: 'dotnetserverdev',
+                    environmentName: 'Dotnetserverdev-env',
+                    rootObject: 'devops_api/dev_builds/null/dotnetserverdev-${BUILD_NUMBER}-${BUILD_TAG}.zip',
                     versionLabelFormat: '${BUILD_NUMBER}-${BUILD_TAG}-prod',
                     sleepTime: 90,
                     checkHealth: true
                 ])
             }
         }
-
         stage("Commit changes back to production repo"){
             steps{
                 // sh 'git checkout --track origin/dev'
