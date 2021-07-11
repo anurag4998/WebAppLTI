@@ -16,6 +16,7 @@ pipeline {
                   echo "env.GIT_COMMIT"
                   echo "${env.GIT_COMMIT}"
                 }
+                git checkout dev
                 sh 'cd devops_api && dotnet restore'
                 sh 'cd devops_api && dotnet build'
                 sh 'cd devops_api && dotnet publish -o site'
@@ -62,16 +63,16 @@ pipeline {
             }
         }
 
-        // stage("Commit changes back to production repo"){
-        //     steps{
-        //         sh 'git checkout --track origin/dev'
-        //         sh 'git checkout --track origin/master'
-        //         sh 'git merge dev'
-        //         withCredentials([usernamePassword(credentialsId: 'mygithubcredentials', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-        //             sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/vineetb95/WebAppLTI' )
-        //         }
-        //     }
-        // }
+        stage("Commit changes back to production repo"){
+            steps{
+                // sh 'git checkout --track origin/dev'
+                sh 'git checkout --track origin/master'
+                sh 'git merge dev'
+                withCredentials([usernamePassword(credentialsId: 'mygithubcredentials', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                    sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/vineetb95/WebAppLTI' )
+                }
+            }
+        }
     }
     post {
     // Clean after build
