@@ -41,7 +41,7 @@ pipeline {
                     maxAttempts: 30,
                     applicationName: 'dotnetserverdev',
                     environmentName: 'Dotnetserverdev-env',
-                    rootObject: 'devops_api/dev_builds/null/dotnetserverdev-18-jenkins-dotnetapi-18',
+                    rootObject: 'devops_api/dev_builds/null/dotnetserverdev-18-jenkins-dotnetapi-18.zip',
                     versionLabelFormat: '${BUILD_NUMBER}-${BUILD_TAG}-prod',
                     sleepTime: 90,
                     checkHealth: true
