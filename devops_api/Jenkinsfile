@@ -1,0 +1,83 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build'){ 
+            steps {
+                script {
+                  // Checkout the repository and save the resulting metadata
+                  def scmVars = checkout scm
+
+                  // Display the variable using scmVars
+                  echo "scmVars.GIT_COMMIT"
+                  echo "${scmVars.GIT_COMMIT}"
+
+                  // Displaying the variables saving it as environment variable
+                  env.GIT_COMMIT = scmVars.GIT_COMMIT
+                  echo "env.GIT_COMMIT"
+                  echo "${env.GIT_COMMIT}"
+                }
+                sh "git checkout dev"
+                sh 'cd devops_api && dotnet restore'
+                sh 'cd devops_api && dotnet build'
+                sh 'cd devops_api && dotnet publish -o site'
+                sh 'cd devops_api/site && zip ../site.zip *'
+                sh 'cd devops_api && zip deploymentpackage.zip site.zip aws-windows-deployment-manifest.json'
+            }
+        }
+        // stage('Deploy to EB - development'){
+        //     steps{
+        //         step([$class: 'AWSEBDeploymentBuilder',
+        //             credentialId: 'IAMuserLTI',
+        //             awsRegion: 'ap-south-1',
+        //             maxAttempts: 30,
+        //             applicationName: 'dotnetserverdev',
+        //             environmentName: 'Dotnetserverdev-env',
+        //             rootObject: 'devops_api/deploymentpackage.zip',
+        //             versionLabelFormat: '${BUILD_NUMBER}-${BUILD_TAG}',
+        //             sleepTime: 90,
+        //             checkHealth: true
+        //         ])
+        //     }
+        // }
+        stage('Deploy to EB - production'){
+            input{
+              message 'Do you want to proceed ??'
+            }
+            steps{
+                echo "${env.GIT_COMMIT}"
+                // withAWS(region:'ap-south-1', credentials:'IAMuserLTI') {
+                //     s3Download bucket: 'elasticbeanstalk-ap-south-1-913313549960', path: "null/dotnetserverdev-${BUILD_NUMBER}-${BUILD_TAG}.zip", file:'devops_api/dev_builds/'
+                // }
+                sh "git branch"
+                // step([$class: 'AWSEBDeploymentBuilder',
+                //     credentialId: 'IAMuserLTI',
+                //     awsRegion: 'ap-south-1',
+                //     maxAttempts: 30,
+                //     applicationName: 'dotnetserverdev',
+                //     environmentName: 'Dotnetserverdev-env',
+                //     rootObject: 'devops_api/dev_builds/dotnetserverdev-${BUILD_NUMBER}-${BUILD_TAG}.zip',
+                //     versionLabelFormat: '${BUILD_NUMBER}-${BUILD_TAG}-prod',
+                //     sleepTime: 90,
+                //     checkHealth: true
+                // ])
+            }
+        }
+
+        stage("Commit changes back to production repo"){
+            steps{
+                // sh 'git checkout --track origin/dev'
+                sh 'git checkout --track origin/master'
+                sh 'git merge dev'
+                withCredentials([usernamePassword(credentialsId: 'mygithubcredentials', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                    sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/vineetb95/WebAppLTI' )
+                }
+            }
+        }
+    }
+    post {
+    // Clean after build
+        always {
+            cleanWs()
+        }
+    }
+}

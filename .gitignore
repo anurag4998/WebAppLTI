@@ -48,3 +48,10 @@ web-client-angular/typings
 # System Files
 web-client-angular/.DS_Store
 web-client-angular/Thumbs.db
+
+# devops_api stuff
+devops_api/bin
+devops_api/obj
+devops_api/site.zip
+devops_api/deploymentpackage.zip
+devops_api/dev_builds
