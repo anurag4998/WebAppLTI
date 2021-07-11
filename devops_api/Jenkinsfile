@@ -44,9 +44,9 @@ pipeline {
             }
             steps{
                 echo "${env.GIT_COMMIT}"
-                withAWS(region:'ap-south-1', credentials:'IAMuserLTI') {
-                    s3Download bucket: 'elasticbeanstalk-ap-south-1-913313549960', path: "null/dotnetserverdev-${BUILD_NUMBER}-${BUILD_TAG}.zip", file:'devops_api/dev_builds/'
-                }
+                // withAWS(region:'ap-south-1', credentials:'IAMuserLTI') {
+                //     s3Download bucket: 'elasticbeanstalk-ap-south-1-913313549960', path: "null/dotnetserverdev-${BUILD_NUMBER}-${BUILD_TAG}.zip", file:'devops_api/dev_builds/'
+                // }
                 sh "git branch"
                 // step([$class: 'AWSEBDeploymentBuilder',
                 //     credentialId: 'IAMuserLTI',
