@@ -64,5 +64,9 @@ pipeline {
         always {
             cleanWs()
         }
+    //Do this if the pipeline was aborted
+        aborted{
+            echo "The pipeline was aborted!!"
+        }
     }
 }
