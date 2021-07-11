@@ -3,19 +3,20 @@ pipeline {
     stages {
         stage('Build'){ 
             steps {
-                script {
-                  // Checkout the repository and save the resulting metadata
-                  def scmVars = checkout scm
+                // script {
+                //   // Checkout the repository and save the resulting metadata
+                //   def scmVars = checkout scm
 
-                  // Display the variable using scmVars
-                  echo "scmVars.GIT_COMMIT"
-                  echo "${scmVars.GIT_COMMIT}"
+                //   // Display the variable using scmVars
+                //   echo "scmVars.GIT_COMMIT"
+                //   echo "${scmVars.GIT_COMMIT}"
 
-                  // Displaying the variables saving it as environment variable
-                  env.GIT_COMMIT = scmVars.GIT_COMMIT
-                  echo "env.GIT_COMMIT"
-                  echo "${env.GIT_COMMIT}"
-                }
+                //   // Displaying the variables saving it as environment variable
+                //   env.GIT_COMMIT = scmVars.GIT_COMMIT
+                //   echo "env.GIT_COMMIT"
+                //   echo "${env.GIT_COMMIT}"
+                // }
+
                 sh "git checkout dev"
                 sh 'cd devops_api && dotnet restore'
                 sh 'cd devops_api && dotnet build'
@@ -44,7 +45,7 @@ pipeline {
               message 'Do you want to proceed ??'
             }
             steps{
-                echo "${env.GIT_COMMIT}"
+                // echo "${env.GIT_COMMIT}"
                 // withAWS(region:'ap-south-1', credentials:'IAMuserLTI') {
                 //     s3Download bucket: 'elasticbeanstalk-ap-south-1-913313549960', path: "null/dotnetserverdev-${BUILD_NUMBER}-${BUILD_TAG}.zip", file:'devops_api/dev_builds/'
                 // }
@@ -67,6 +68,7 @@ pipeline {
             steps{
                 // sh 'git checkout --track origin/dev'
                 sh 'git checkout --track origin/master'
+                sh 'git pull'
                 sh 'git merge dev'
                 withCredentials([usernamePassword(credentialsId: 'mygithubcredentials', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                     sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/vineetb95/WebAppLTI' )
