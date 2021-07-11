@@ -3,6 +3,19 @@ pipeline {
     stages {
         stage('Build') { 
             steps {
+                script {
+                  // Checkout the repository and save the resulting metadata
+                  def scmVars = checkout scm
+
+                  // Display the variable using scmVars
+                  echo "scmVars.GIT_COMMIT"
+                  echo "${scmVars.GIT_COMMIT}"
+
+                  // Displaying the variables saving it as environment variable
+                  env.GIT_COMMIT = scmVars.GIT_COMMIT
+                  echo "env.GIT_COMMIT"
+                  echo "${env.GIT_COMMIT}"
+                }
                 sh 'cd devops_api && dotnet restore'
                 sh 'cd devops_api && dotnet build'
                 sh 'cd devops_api && dotnet publish -o site'
