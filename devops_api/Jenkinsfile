@@ -3,19 +3,6 @@ pipeline {
     stages {
         stage('Build'){ 
             steps {
-                // script {
-                //   // Checkout the repository and save the resulting metadata
-                //   def scmVars = checkout scm
-
-                //   // Display the variable using scmVars
-                //   echo "scmVars.GIT_COMMIT"
-                //   echo "${scmVars.GIT_COMMIT}"
-
-                //   // Displaying the variables saving it as environment variable
-                //   env.GIT_COMMIT = scmVars.GIT_COMMIT
-                //   echo "env.GIT_COMMIT"
-                //   echo "${env.GIT_COMMIT}"
-                // }
                 sh "git checkout dev"
                 sh 'cd devops_api && dotnet restore'
                 sh 'cd devops_api && dotnet build'
@@ -38,25 +25,27 @@ pipeline {
         //             checkHealth: true
         //         ])
         //     }
-        // }
+        // }   
         stage('Deploy to EB - production'){
             input{
               message 'Do you want to proceed ??'
             }
             steps{
-                // echo "${env.GIT_COMMIT}"
-                // withAWS(region:'ap-south-1', credentials:'IAMuserLTI') {
-                //     s3Download bucket: 'elasticbeanstalk-ap-south-1-913313549960', path: "null/dotnetserverdev-${BUILD_NUMBER}-${BUILD_TAG}.zip", file:'devops_api/dev_builds/'
-                // }
-                sh "git branch"
+                withAWS(region:'ap-south-1', credentials:'IAMuserLTI') {
+                    // s3Download bucket: 'elasticbeanstalk-ap-south-1-913313549960', path: "null/dotnetserverdev-${BUILD_NUMBER}-${BUILD_TAG}.zip", file:'devops_api/dev_builds/'
+                    s3Download bucket: 'elasticbeanstalk-ap-south-1-913313549960', path: "null/dotnetserverdev-18-jenkins-dotnetapi-18.zip", file:'devops_api/dev_builds/'
+                }
+                sh "ls devops_api"
+                sh "ls devops_api/dev_builds"
                 // step([$class: 'AWSEBDeploymentBuilder',
                 //     credentialId: 'IAMuserLTI',
                 //     awsRegion: 'ap-south-1',
                 //     maxAttempts: 30,
                 //     applicationName: 'dotnetserverdev',
                 //     environmentName: 'Dotnetserverdev-env',
-                //     rootObject: 'devops_api/dev_builds/dotnetserverdev-${BUILD_NUMBER}-${BUILD_TAG}.zip',
-                //     versionLabelFormat: '${BUILD_NUMBER}-${BUILD_TAG}-prod',
+                //     // rootObject: 'devops_api/dev_builds/dotnetserverdev-${BUILD_NUMBER}-${BUILD_TAG}.zip',
+                //     rootObject: 'devops_api/dev_builds/dotnetserverdev-18-jenkins-dotnetapi-18.zip',
+                //     versionLabelFormat: '${BUILD_NUMBER}-${BUILD_TAG}',
                 //     sleepTime: 90,
                 //     checkHealth: true
                 // ])
