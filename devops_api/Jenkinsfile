@@ -35,6 +35,7 @@ pipeline {
                     // s3Download bucket: 'elasticbeanstalk-ap-south-1-913313549960', path: "null/dotnetserverdev-${BUILD_NUMBER}-${BUILD_TAG}.zip", file:'devops_api/dev_builds/'
                     s3Download bucket: 'elasticbeanstalk-ap-south-1-913313549960', file:'devops_api/dev_builds/'
                 }
+                sh "ls devops_api/dev_builds/null"
                 step([$class: 'AWSEBDeploymentBuilder',
                     credentialId: 'IAMuserLTI',
                     awsRegion: 'ap-south-1',
