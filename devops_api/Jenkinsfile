@@ -32,7 +32,7 @@ pipeline {
                     applicationName: 'dotnetserverdev',
                     environmentName: 'Dotnetserverdev-env',
                     rootObject: 'devops_api/deploymentpackage.zip',
-                    versionLabelFormat: '${GIT_COMMIT}-${BUILD_TAG}',
+                    versionLabelFormat: '${BUILD_NUMBER}-${BUILD_TAG}',
                     sleepTime: 90,
                     checkHealth: true
                 ])
