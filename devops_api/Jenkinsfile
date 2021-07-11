@@ -35,18 +35,20 @@ pipeline {
                     // s3Download bucket: 'elasticbeanstalk-ap-south-1-913313549960', path: "null/dotnetserverdev-${BUILD_NUMBER}-${BUILD_TAG}.zip", file:'devops_api/dev_builds/'
                     s3Download bucket: 'elasticbeanstalk-ap-south-1-913313549960', path: "null/dotnetserverdev-18-jenkins-dotnetapi-18.zip", file:'devops_api/dev_builds/'
                 }
-                step([$class: 'AWSEBDeploymentBuilder',
-                    credentialId: 'IAMuserLTI',
-                    awsRegion: 'ap-south-1',
-                    maxAttempts: 30,
-                    applicationName: 'dotnetserverdev',
-                    environmentName: 'Dotnetserverdev-env',
-                    // rootObject: 'devops_api/dev_builds/dotnetserverdev-${BUILD_NUMBER}-${BUILD_TAG}.zip',
-                    rootObject: 'devops_api/dev_builds/dotnetserverdev-18-jenkins-dotnetapi-18.zip',
-                    versionLabelFormat: '${BUILD_NUMBER}-${BUILD_TAG}',
-                    sleepTime: 90,
-                    checkHealth: true
-                ])
+                sh "ls devops_api"
+                sh "ls devops_api/dev_builds"
+                // step([$class: 'AWSEBDeploymentBuilder',
+                //     credentialId: 'IAMuserLTI',
+                //     awsRegion: 'ap-south-1',
+                //     maxAttempts: 30,
+                //     applicationName: 'dotnetserverdev',
+                //     environmentName: 'Dotnetserverdev-env',
+                //     // rootObject: 'devops_api/dev_builds/dotnetserverdev-${BUILD_NUMBER}-${BUILD_TAG}.zip',
+                //     rootObject: 'devops_api/dev_builds/dotnetserverdev-18-jenkins-dotnetapi-18.zip',
+                //     versionLabelFormat: '${BUILD_NUMBER}-${BUILD_TAG}',
+                //     sleepTime: 90,
+                //     checkHealth: true
+                // ])
             }
         }
 
