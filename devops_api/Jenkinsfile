@@ -16,7 +16,6 @@ pipeline {
                 //   echo "env.GIT_COMMIT"
                 //   echo "${env.GIT_COMMIT}"
                 // }
-
                 sh "git checkout dev"
                 sh 'cd devops_api && dotnet restore'
                 sh 'cd devops_api && dotnet build'
