@@ -1,9 +1,9 @@
 pipeline {
     agent any
+    environment {
+        app 
+    }
     stages {
-        environment {
-            app 
-        }
         stage('Build'){ 
             steps {
                 sh "git checkout dev"
