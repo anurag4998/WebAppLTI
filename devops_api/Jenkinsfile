@@ -9,10 +9,13 @@ pipeline {
                 sh 'cd devops_api && dotnet publish -o site'
             }
         }
-        stage('Build docker image'){
+        stage('Build and push docker image'){
             steps{
                 script{
                     def app = docker.build("devops_api:${env.Build_ID}","./devops_api")
+                    docker.withRegistry('https://registry.hub.docker.com', 'mydockercredentials') {            
+                           app.push()
+                    }
                 }
             }
         }   
