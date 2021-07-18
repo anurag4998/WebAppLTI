@@ -53,5 +53,6 @@ web-client-angular/Thumbs.db
 devops_api/bin
 devops_api/obj
 devops_api/site.zip
+devops_api/site
 devops_api/deploymentpackage.zip
 devops_api/dev_builds
