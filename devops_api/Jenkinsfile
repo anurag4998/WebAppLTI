@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    environment {
-        app 
-    }
     stages {
         stage('Build'){ 
             steps {
@@ -15,7 +12,7 @@ pipeline {
         stage('Build docker image'){
             steps{
                 script{
-                    app = docker.build("devops_api")
+                    def app = docker.build("devops_api")
                 }
             }
         }   
