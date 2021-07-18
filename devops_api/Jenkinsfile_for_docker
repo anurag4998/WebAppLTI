@@ -40,27 +40,6 @@ pipeline {
             }
 
         }
-        stage('Deploy to EB - production'){
-            input{
-              message 'Do you want to proceed ??'
-            }
-            steps{
-                withAWS(region:'ap-south-1', credentials:'IAMuserLTI') {
-                    s3Download bucket: 'elasticbeanstalk-ap-south-1-913313549960', file:'devops_api/dev_builds/'
-                }
-                step([$class: 'AWSEBDeploymentBuilder',
-                    credentialId: 'IAMuserLTI',
-                    awsRegion: 'ap-south-1',
-                    maxAttempts: 30,
-                    applicationName: 'dotnetserverdev',
-                    environmentName: 'Dotnetserverdev-env',
-                    rootObject: 'devops_api/dev_builds/null/dotnetserverdev-${BUILD_NUMBER}-${BUILD_TAG}.zip',
-                    versionLabelFormat: '${BUILD_NUMBER}-${BUILD_TAG}-prod',
-                    sleepTime: 90,
-                    checkHealth: true
-                ])
-            }
-        }
         stage("Commit changes back to production repo"){
             steps{
                 // sh 'git checkout --track origin/dev'
