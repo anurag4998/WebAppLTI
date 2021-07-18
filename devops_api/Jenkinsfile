@@ -11,9 +11,10 @@ pipeline {
         }
         stage('Build and push docker image'){
             steps{
+                sh 'docker logout'
                 script{
                     def app = docker.build("devops_api:${env.Build_ID}","./devops_api")
-                    docker.withRegistry('vineetb95', 'mydockercredentials') {            
+                    docker.withRegistry('https://registry.hub.docker.com', 'mydockercredentials') {            
                            app.push()
                     }
                 }
