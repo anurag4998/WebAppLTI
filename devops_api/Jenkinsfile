@@ -1,29 +1,22 @@
 pipeline {
     agent any
     stages {
+        environment {
+            app 
+        }
         stage('Build'){ 
             steps {
                 sh "git checkout dev"
                 sh 'cd devops_api && dotnet restore'
                 sh 'cd devops_api && dotnet build'
                 sh 'cd devops_api && dotnet publish -o site'
-                sh 'cd devops_api/site && zip ../site.zip *'
-                sh 'cd devops_api && zip deploymentpackage.zip site.zip aws-windows-deployment-manifest.json'
             }
         }
-        stage('Deploy to EB - development'){
+        stage('Build docker image'){
             steps{
-                step([$class: 'AWSEBDeploymentBuilder',
-                    credentialId: 'IAMuserLTI',
-                    awsRegion: 'ap-south-1',
-                    maxAttempts: 30,
-                    applicationName: 'dotnetserverdev',
-                    environmentName: 'Dotnetserverdev-env',
-                    rootObject: 'devops_api/deploymentpackage.zip',
-                    versionLabelFormat: '${BUILD_NUMBER}-${BUILD_TAG}',
-                    sleepTime: 90,
-                    checkHealth: true
-                ])
+                script{
+                    app = docker.build("devops_api")
+                }
             }
         }   
         stage('Deploy to EB - production'){
