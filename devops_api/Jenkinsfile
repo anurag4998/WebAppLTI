@@ -12,7 +12,7 @@ pipeline {
         stage('Build docker image'){
             steps{
                 script{
-                    def app = docker.build("devops_api")
+                    def app = docker.build("devops_api:${env.Build_ID}","./devops_api")
                 }
             }
         }   
