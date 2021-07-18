@@ -12,11 +12,11 @@ pipeline {
         stage('Build and push docker image'){
             steps{
                 sh 'docker logout'
-                script{
-                    def app = docker.build("devops_api:${env.Build_ID}","./devops_api")
-                    docker.withRegistry('https://registry.hub.docker.com', 'mydockercredentials') {            
-                           app.push()
-                    }
+                sh "docker build -t devops_api:${env.BUILD_ID} ./devops_api"
+                withCredentials([usernamePassword(credentialsId: 'mydockercredentials', passwordVariable: 'PASSWORD', usernameVariable: 'USER')]) {
+                    sh "docker login -u ${USER} --password ${PASSWORD}"
+                    sh "docker tag devops_api:${env.BUILD_ID} ${USER}/devops_api:${env.BUILD_ID}"
+                    sh "docker push ${USER}/devops_api:${env.BUILD_ID}"
                 }
             }
         }   
