@@ -19,7 +19,19 @@ pipeline {
                     sh "docker push ${USER}/devops_api:${env.BUILD_ID}"
                 }
             }
-        }   
+        }
+        stage('Deploy to development'){
+            steps{
+                script{
+                    withCredentials([sshUserPrivateKey(credentialsId: 'jenkinsec2instance', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
+                        def remote = [:]
+                        remote.user = userName
+                        remote.identityFile = identity
+                        sshCommand remote: remote, command: 'docker info'
+                    }
+                }
+            }
+        }
         stage('Deploy to EB - production'){
             input{
               message 'Do you want to proceed ??'
