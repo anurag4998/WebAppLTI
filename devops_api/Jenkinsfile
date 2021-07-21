@@ -13,7 +13,7 @@ pipeline {
             steps{
                 sh 'docker logout'
                 sh "docker build -t devops_api:${env.BUILD_ID} ./devops_api"
-                withCredentials([usernamePassword(credentialsId: 'mydockercredentials', passwordVariable: 'PASSWORD', usernameVariable: 'USER')]) {
+                withCredentials([usernamePassword(credentialsId: 'anuragdockerhub', passwordVariable: 'PASSWORD', usernameVariable: 'USER')]) {
                         sh "docker login -u ${USER} --password ${PASSWORD}"
                         sh "docker tag devops_api:${env.BUILD_ID} ${USER}/devops_api:${env.BUILD_ID}"
                         sh "docker push ${USER}/devops_api:${env.BUILD_ID}"
