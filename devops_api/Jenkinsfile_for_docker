@@ -41,17 +41,33 @@ pipeline {
                 }
             }
         }
-        stage("Commit changes back to production repo"){
-            steps{
-                // sh 'git checkout --track origin/dev'
-                sh 'git checkout --track origin/master'
-                sh 'git pull'
-                sh 'git merge dev'
-                withCredentials([usernamePassword(credentialsId: 'mygithubcreds', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                    sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/vineetb95/WebAppLTI' )
+        
+        stage('Deploy to production'){
+         input{
+              message 'Do you want to proceed ??'
+            }
+        steps{
+        
+                script{
+                    withCredentials([sshUserPrivateKey(credentialsId: 'jenkinsec2instance', keyFileVariable: 'identity', usernameVariable: 'userName')]) {
+
+                        def remote = [:]
+                        remote.name = 'EC2dev'
+                        remote.host = 'ec2-15-207-85-52.ap-south-1.compute.amazonaws.com'
+                        remote.allowAnyHosts = true
+                        remote.user = userName
+                        remote.identityFile = identity
+                        sshCommand remote: remote, command: "docker pull anurag4998/devops_api:${env.BUILD_ID}"
+                        sshCommand remote: remote, command: "docker stop prodContainer"
+                        sshCommand remote: remote, command: "docker rm prodContainer"
+                        sshCommand remote: remote, command: "docker create -p 5000:80 --name prodContainer anurag4998/devops_api:${env.BUILD_ID}"
+                        sshCommand remote: remote, command: "docker start prodContainer"
+
+                    }
                 }
             }
         }
+       
     }
     post {
     // Clean after build
