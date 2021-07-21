@@ -34,7 +34,7 @@ pipeline {
                         sshCommand remote: remote, command: "docker pull anurag4998/devops_api:${env.BUILD_ID}"
                         sshCommand remote: remote, command: "docker stop devContainer"
                         sshCommand remote: remote, command: "docker rm devContainer"
-                        sshCommand remote: remote, command: "docker create -p 5000:80 --name devContainer {docker-hub-username}/devops_api:${env.BUILD_ID}"
+                        sshCommand remote: remote, command: "docker create -p 5000:80 --name devContainer anurag4998/devops_api:${env.BUILD_ID}"
                         sshCommand remote: remote, command: "docker start devContainer"
 
                     }
