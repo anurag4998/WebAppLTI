@@ -7,6 +7,7 @@ pipeline {
                  echo "Add build steps here"
                  cd web-client && npm install
                  cd web-client && npm run build
+                 '''
                  withAWS(region:'ap-south-1', credentials:'IAMuserLTI') {
                     s3Upload(bucket: 'reactjsdev', file:'web-client/build/')
                 }
