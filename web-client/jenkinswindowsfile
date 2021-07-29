@@ -3,12 +3,10 @@ pipeline {
     stages {
         stage('Deploy to development') { 
             steps {
-              bat '''
-                 echo "Add build steps here"
-                 cd web-client && npm install
-                 cd web-client && npm run build
-                 '''
-                 withAWS(region:'ap-south-1', credentials:'IAMuserLTI') {
+              bat '''  echo "Add build steps here" ''' 
+              bat '''  cd web-client && npm install ''' 
+              bat ''' cd web-client && npm run build ''' 
+              withAWS(region:'ap-south-1', credentials:'IAMuserLTI') {
                     s3Upload(bucket: 'reactjsdev', file:'web-client/build/')
                 }
                 emailext attachLog: true, body: 'Proceed or abort the deployment process at $RUN_DISPLAY_URL.', to: 'vineet.bakshi95@gmail.com', recipientProviders: [developers()], subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - Permission required for deploying to production.'
