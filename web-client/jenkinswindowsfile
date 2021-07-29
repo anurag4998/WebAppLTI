@@ -9,7 +9,6 @@ pipeline {
               withAWS(region:'ap-south-1', credentials:'IAMuserLTI') {
                     s3Upload(bucket: 'reactjsdev', file:'web-client/build/')
                 }
-                emailext attachLog: true, body: 'Proceed or abort the deployment process at $RUN_DISPLAY_URL.', to: 'vineet.bakshi95@gmail.com', recipientProviders: [developers()], subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - Permission required for deploying to production.'
             }
         }
         stage('Deploy to production') {
@@ -18,9 +17,9 @@ pipeline {
             }
             steps {
                 withAWS(region:'ap-south-1', credentials:'IAMuserLTI') {
-                    s3Download bucket: 'reactdeploydemo', file:'web-client/build/', force: true
+                    s3Download bucket: 'reactjsdev', file:'web-client/build/', force: true
                     s3Upload bucket: 'forstaticwebhosting', file:'web-client/build/' 
-//                     s3Copy fromBucket: 'reactdeploydemo', fromPath: '**/', toBucket: 'forstaticwebhosting', toPath: '**/'
+//                     s3Copy fromBucket: 'reactjsdev', fromPath: '**/', toBucket: 'forstaticwebhosting', toPath: '**/'
                 }
             }
         }
@@ -33,12 +32,6 @@ pipeline {
                     sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/vineetb95/WebAppLTI' )
                 }
             }
-        }
-    }
-    post {
-    // Clean after build
-        always {
-            cleanWs()
         }
     }
 }
